@@ -1,5 +1,5 @@
 {
-  description = "finance-backend";
+  description = "Rust development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -31,6 +31,7 @@
 
           # stdlib gravável para o RustRover (RUST-16842)
           if [ "$(cat .direnv/rust-src/.source 2>/dev/null)" != "${toolchain}" ]; then
+            mkdir -p .direnv
             chmod -R u+w .direnv/rust-src 2>/dev/null; rm -rf .direnv/rust-src
             cp -rL --no-preserve=mode ${toolchain}/lib/rustlib/src/rust .direnv/rust-src
             echo "${toolchain}" > .direnv/rust-src/.source
