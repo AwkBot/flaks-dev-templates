@@ -2,13 +2,13 @@
 
 A collection of [Nix flake](https://nixos.wiki/wiki/Flakes) templates for development environments, one per language. Each template provides a reproducible `devShell`: the same toolchain, at the same version, on any machine with Nix.
 
-The idea is simple: copy the files from the language directory into the root of your project and you're done.
+Templates are exposed through Nix's native template mechanism (`nix flake init -t`). The files are copied into your project, so the result is independent and doesn't reference this repository.
 
 ## Available templates
 
 | Template | Files | Description |
 |----------|-------|-------------|
-| [`rust`](./rust) | `flake.nix`, `rust-toolchain.toml` | Rust with the toolchain provided by [rust-overlay](https://github.com/oxalica/rust-overlay), version pinned in `rust-toolchain.toml` |
+| [`rust`](./rust) | `flake.nix`, `rust-toolchain.toml`, `.envrc`, `.gitignore` | Rust with the toolchain provided by [rust-overlay](https://github.com/oxalica/rust-overlay), version pinned in `rust-toolchain.toml` |
 
 ## Requirements
 
@@ -29,29 +29,28 @@ The idea is simple: copy the files from the language directory into the root of 
 
 ## Usage
 
-### 1. Copy the files into your project root
+### 1. Initialize the template
 
-Download them directly, without cloning the repository:
+In the current directory:
 
 ```sh
 cd my-project
-curl -fsSLO "https://raw.githubusercontent.com/awkbot/flake-dev-templates/main/rust/{flake.nix,rust-toolchain.toml}"
+nix flake init -t github:awkbot/flake-dev-templates#rust
 ```
 
-> `curl -O` overwrites files with the same name without asking. If your project already has a `flake.nix`, back it up first.
-
-Or, if you prefer cloning:
+Or in a new directory:
 
 ```sh
-git clone --depth 1 https://github.com/awkbot/flake-dev-templates /tmp/flake-dev-templates
-cp -n /tmp/flake-dev-templates/rust/* my-project/
+nix flake new my-project -t github:awkbot/flake-dev-templates#rust
 ```
+
+Every file in the template directory is copied, including `.envrc` and `.gitignore`. Existing files are not overwritten: if your project already has a `flake.nix` or `.gitignore`, it is kept as is.
 
 ### 2. Track the files in git
 
 ```sh
 git init   # if the project is not a repository yet
-git add flake.nix rust-toolchain.toml
+git add flake.nix rust-toolchain.toml .envrc .gitignore
 ```
 
 Without this, `nix develop` fails with a file-not-found error. You don't need to commit, just stage them.
@@ -69,9 +68,10 @@ On the first run Nix downloads the dependencies and generates `flake.lock`. Comm
 **Automatically, with direnv:**
 
 ```sh
-echo "use flake" > .envrc
 direnv allow
 ```
+
+The template already ships an `.envrc` with `use flake`.
 
 From then on the environment is loaded when you enter the directory and unloaded when you leave. Changes to `flake.nix` or `rust-toolchain.toml` reload the environment automatically.
 
@@ -122,8 +122,9 @@ Then `nix develop` (or direnv) picks up the new version.
 ## Adding a template
 
 1. Create a directory named after the language containing the `flake.nix` and any supporting files.
-2. Test it by copying into an empty project and running `nix develop`.
-3. Add a row to the templates table (with the file list) and a section with language-specific instructions.
+2. Register it under `templates` in the root `flake.nix`, with a `path`, a `description` and a `welcomeText`.
+3. Test it by running `nix flake init -t /path/to/this/repo#<language>` in an empty repository, then `nix develop`.
+4. Add a row to the templates table (with the file list) and a section with language-specific instructions.
 
 ## License
 
