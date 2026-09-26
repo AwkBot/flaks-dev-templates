@@ -1,4 +1,4 @@
-# flake-dev-templates
+# flaks-dev-templates
 
 A collection of [Nix flake](https://nixos.wiki/wiki/Flakes) templates for development environments, one per language. Each template provides a reproducible `devShell`: the same toolchain, at the same version, on any machine with Nix.
 
@@ -35,13 +35,13 @@ In the current directory:
 
 ```sh
 cd my-project
-nix flake init -t github:awkbot/flake-dev-templates#rust
+nix flake init -t github:AwkBot/flaks-dev-templates#rust
 ```
 
 Or in a new directory:
 
 ```sh
-nix flake new my-project -t github:awkbot/flake-dev-templates#rust
+nix flake new my-project -t github:AwkBot/flaks-dev-templates#rust
 ```
 
 Every file in the template directory is copied, including `.envrc` and `.gitignore`. Existing files are not overwritten: if your project already has a `flake.nix` or `.gitignore`, it is kept as is.
