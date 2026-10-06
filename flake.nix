@@ -33,6 +33,35 @@
             ```
           '';
         };
+        python = {
+          path = ./python;
+          description = "Python development environment with Python and deps managed by uv";
+          welcomeText = ''
+            # Python development environment
+
+            Next steps:
+
+            Track the files in git (flakes only see tracked files):
+
+            ```sh
+            git add .
+            ```
+
+            Enter the environment:
+
+            ```sh
+            direnv allow   # with direnv
+            nix develop    # without direnv
+            ```
+
+            Create the project and pin a Python version:
+
+            ```sh
+            uv init
+            uv python pin 3.12
+            ```
+          '';
+        };
         default = self.templates.rust;
       };
     };

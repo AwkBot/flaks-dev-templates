@@ -9,6 +9,7 @@ Templates are exposed through Nix's native template mechanism (`nix flake init -
 | Template | Files | Description |
 |----------|-------|-------------|
 | [`rust`](./rust) | `flake.nix`, `rust-toolchain.toml`, `.envrc`, `.gitignore` | Rust with the toolchain provided by [rust-overlay](https://github.com/oxalica/rust-overlay), version pinned in `rust-toolchain.toml` |
+| [`python`](./python) | `flake.nix`, `.envrc`, `.gitignore` | Python with [uv](https://docs.astral.sh/uv/) managing the interpreter, virtualenv and dependencies |
 
 ## Requirements
 
@@ -118,6 +119,27 @@ targets = []
 ```
 
 Then `nix develop` (or direnv) picks up the new version.
+
+## Python
+
+### First run
+
+The template only provides `uv`; the project, interpreter and virtualenv are created inside it:
+
+```sh
+nix develop          # or via direnv
+uv init              # creates pyproject.toml
+uv python pin 3.12   # downloads and pins the interpreter (writes .python-version)
+uv add <package>
+uv run <script>
+```
+
+### Python version and dependencies
+
+Unlike the Rust template, the interpreter isn't provided by Nix: `uv` downloads and manages it directly (via `uv python install` / `uv python pin`), independent of nixpkgs. Nix only supplies `uv` itself, pinned through `flake.lock`.
+
+- Python version: `.python-version` (created by `uv python pin`) or `requires-python` in `pyproject.toml`.
+- Dependencies: `pyproject.toml`, locked in `uv.lock`. Commit both.
 
 ## Adding a template
 
