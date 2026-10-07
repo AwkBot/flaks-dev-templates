@@ -29,6 +29,7 @@
 
         shellHook = ''
           ln -sfn ${toolchain} .toolchain
+          ln -sfn ${pkgs.gcc} .gcc
 
           # stdlib gravável para o RustRover (RUST-16842)
           if [ "$(cat .direnv/rust-src/.source 2>/dev/null)" != "${toolchain}" ]; then
