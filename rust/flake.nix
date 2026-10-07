@@ -24,6 +24,7 @@
         packages = [
           toolchain
           pkgs.cargo-nextest
+          pkgs.gcc
         ];
 
         shellHook = ''
